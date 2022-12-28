@@ -1,0 +1,22 @@
+name: continuous-integration
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - run: npm install
+      - run: make lint
+      - name: test
+        run: make test
+      - name: Test & publish code coverage
+        uses: paambaati/codeclimate-action@v3.2.0
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CONTINUOUS_INTEGRATION }}
+        with:
+          coverageCommand: npx jest --coverage
+          debug: true
+     
